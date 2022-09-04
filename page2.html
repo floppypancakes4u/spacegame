@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <style>
+      body {
+        background-color: ivory;
+      }
+      #wrapper {
+        position: relative;
+      }
+      canvas {
+        position: absolute;
+        left: 40px;
+        top: 5px;
+        border: 1px solid red;
+      }
+      #amount {
+        position: absolute;
+        left: 1px;
+        top: 5px;
+        margin-bottom: 15px;
+        width: 23px;
+        border: 0;
+        color: #f6931f;
+        font-weight: bold;
+      }
+      #slider-vertical {
+        position: absolute;
+        left: 5px;
+        top: 40px;
+        width: 15px;
+        height: 225px;
+        border: 0px;
+        color: #f6931f;
+        font-weight: bold;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/theme.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
+
+    <script>
+      $(function () {
+        var canvas = document.getElementById('canvas');
+        var ctx = canvas.getContext('2d');
+        var cw = canvas.width;
+        var ch = canvas.height;
+
+        var $amount = $('#amount');
+
+        $('#slider-vertical').slider({
+          orientation: 'vertical',
+          range: 'min',
+          min: 2,
+          max: 30,
+          value: 10,
+          slide: function (event, ui) {
+            var value = ui.value;
+            $amount.val(value);
+            drawGrid(value);
+          },
+        });
+
+        $amount.val($('#slider-vertical').slider('value'));
+        drawGrid(10);
+
+        function drawGrid(lineCount) {
+          var xSpan = cw / lineCount;
+          var ySpan = cw / lineCount;
+          ctx.clearRect(0, 0, cw, ch);
+          ctx.save();
+          if (lineCount / 2 === parseInt(lineCount / 2)) {
+            ctx.translate(0.5, 0.5);
+          }
+          ctx.beginPath();
+          for (var i = 0; i < lineCount; i++) {
+            var x = (i + 1) * xSpan;
+            var y = (i + 1) * ySpan;
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, ch);
+            ctx.moveTo(0, y);
+            ctx.lineTo(ch, y);
+          }
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+          ctx.restore();
+        }
+      }); // end $(function(){});
+    </script>
+  </head>
+  <body>
+    <div id="wrapper">
+      <input type="text" id="amount" />
+      <div id="slider-vertical"></div>
+      <canvas id="canvas" width="300" height="300"></canvas>
+    </div>
+  </body>
+</html>
